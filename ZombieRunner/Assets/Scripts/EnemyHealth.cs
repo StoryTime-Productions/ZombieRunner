@@ -6,7 +6,7 @@ public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] float hitPoints = 100f;
 
-    bool isDead = false;
+    public bool isDead = false;
 
     public bool IsDead()
     {

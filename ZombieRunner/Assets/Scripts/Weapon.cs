@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -13,6 +14,10 @@ public class Weapon : MonoBehaviour
     [SerializeField] Ammo ammoSlot;
     [SerializeField] AmmoType ammoType;
     [SerializeField] float timeBetweenShots = 0.5f;
+    [SerializeField] TextMeshProUGUI ammoText;
+    AudioSource audioSource;
+    [SerializeField] AudioClip gunShot;
+    [SerializeField] GameObject pauseChecker;
 
     bool canShoot = true;
 
@@ -21,16 +26,29 @@ public class Weapon : MonoBehaviour
         canShoot = true;
     }
 
+    void Start()
+    {
+        audioSource = transform.parent.gameObject.GetComponent<AudioSource>();
+    }
+
     void Update()
     {
+        DisplayAmmo();
         if (Input.GetMouseButtonDown(0) && canShoot == true)
         {
             StartCoroutine(Shoot());
         }
     }
 
+    private void DisplayAmmo()
+    {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoText.text = currentAmmo.ToString();
+    }
+
     IEnumerator Shoot()
     {
+        if (PauseMenu.gameIsPaused) yield return new WaitForSeconds(5);
         canShoot = false;
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0)
         {
@@ -44,7 +62,9 @@ public class Weapon : MonoBehaviour
 
     private void PlayMuzzleFlash()
     {
+        audioSource.clip = gunShot;
         muzzleFlash.Play();
+        audioSource.Play();
     }
 
     private void ProcessRaycast()

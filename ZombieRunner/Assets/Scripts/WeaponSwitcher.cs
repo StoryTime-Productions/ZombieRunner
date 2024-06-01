@@ -2,14 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponSwitcher : MonoBehaviour
 {
     [SerializeField] int currentWeapon = 0;
+    [SerializeField] Text weaponSelected;
+    [SerializeField] Text canZoom;
 
     void Start()
     {
         SetWeaponActive();
+
+        canZoom.text = "";
     }
 
     void Update()
@@ -77,6 +82,9 @@ public class WeaponSwitcher : MonoBehaviour
             if (weaponIndex == currentWeapon)
             {
                 weapon.gameObject.SetActive(true);
+                weaponSelected.text = "Current: " + weapon.gameObject.name;
+                if (weaponIndex == 2) canZoom.text = "Right-click to Zoom";
+                else canZoom.text = "";
             }
             else
             {
